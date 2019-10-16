@@ -1,6 +1,9 @@
 package chores
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // Chore TODO godoc
 type Chore struct {
@@ -9,4 +12,9 @@ type Chore struct {
 	Frequency time.Duration `json:"frequency"` // TODO: custom type? Part of schedule??
 	Schedule  string        `json:"schedule"`  // TODO: proper type - list of people
 	Current   string        `json:"current"`   // TODO: Person. Part of schedule??
+}
+
+// Repository TODO godoc
+type Repository interface {
+	LoadChore(ctx context.Context, id string) (*Chore, error)
 }
