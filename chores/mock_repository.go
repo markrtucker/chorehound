@@ -12,6 +12,12 @@ type MockRepository struct {
 // Compile-time proof of interface implementation
 var _ Repository = (*MockRepository)(nil)
 
+// SaveChore TODO godoc
+func (m MockRepository) SaveChore(ctx context.Context, c Chore) error {
+
+	return nil
+}
+
 // LoadChore TODO godoc
 func (m MockRepository) LoadChore(ctx context.Context, id string) (*Chore, error) {
 

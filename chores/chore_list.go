@@ -17,4 +17,12 @@ type Chore struct {
 // Repository TODO godoc
 type Repository interface {
 	LoadChore(ctx context.Context, id string) (*Chore, error)
+	SaveChore(ctx context.Context, c Chore) error
+}
+
+// SaveTo TODO godoc
+func (c Chore) SaveTo(ctx context.Context, r Repository) error {
+
+	// TODO: populate ID (or verify uniqueness??)
+	return nil
 }
