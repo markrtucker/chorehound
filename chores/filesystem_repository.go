@@ -3,6 +3,7 @@ package chores
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 
 	"github.com/spf13/afero"
@@ -17,6 +18,23 @@ type FileSystemRepository struct {
 }
 
 var _ Repository = (*FileSystemRepository)(nil)
+
+// NewFileSystemRepository TODO godoc
+func NewFileSystemRepository(base string) Repository {
+
+	repo := FileSystemRepository{
+		fs:   afero.NewOsFs(),
+		base: base,
+	}
+
+	return &repo
+}
+
+// SaveChore TODO godoc
+func (fs *FileSystemRepository) SaveChore(ctx context.Context, c Chore) error {
+
+	return errors.New("save-chore-not-implemented")
+}
 
 // LoadChore TODO godoc
 func (fs *FileSystemRepository) LoadChore(ctx context.Context, id string) (*Chore, error) {
