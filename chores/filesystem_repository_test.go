@@ -10,11 +10,9 @@ import (
 )
 
 func Test_ReadEmptyJson_Success(t *testing.T) {
-	fs := FileSystemRepository{
-		fs: afero.NewMemMapFs(),
-	}
+	fs := MockFileSystemRepository()
 
-	f, err := fs.fs.Create("/fred.json")
+	f, err := fs.GetFs().Create("/fred.json")
 	assert.Nil(t, err, "File setup should not return an error")
 
 	n3, err := f.WriteString("{}")

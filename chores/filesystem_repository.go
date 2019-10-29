@@ -3,7 +3,7 @@ package chores
 import (
 	"context"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io/ioutil"
 
 	"github.com/spf13/afero"
@@ -30,16 +30,50 @@ func NewFileSystemRepository(base string) Repository {
 	return &repo
 }
 
+// MockFileSystemRepository TODO godoc
+func MockFileSystemRepository() *FileSystemRepository {
+	fs := FileSystemRepository{
+		fs: afero.NewMemMapFs(),
+	}
+
+	return &fs
+}
+
 // SaveChore TODO godoc
 func (fs *FileSystemRepository) SaveChore(ctx context.Context, c Chore) error {
 
-	return errors.New("save-chore-not-implemented")
+	f := fs.GetFs()
+
+	// Open file: "<id>.json"
+	// TODO: Check for file existence - duplciate chore ID / constraint violation
+	fname := fs.baseDir() + c.ID + ".json"
+	fmt.Printf("DEBUG: File name %s\n", fname)
+	file, err := f.Create(fname)
+	if err != nil {
+		// TODO Logging
+		return err // TODO wrap error
+	}
+
+	bytes, err := json.Marshal(c)
+	if err != nil {
+		// TODO Logging
+		return err // TODO wrap error
+	}
+
+	b, err := file.Write(bytes)
+	if err != nil {
+		// TODO Logging
+		return err // TODO wrap error
+	}
+
+	fmt.Printf("DEBUG: Wrote %d bytes to file\n", b)
+	return nil
 }
 
 // LoadChore TODO godoc
 func (fs *FileSystemRepository) LoadChore(ctx context.Context, id string) (*Chore, error) {
 
-	f := fs.getFs()
+	f := fs.GetFs()
 
 	// Load file: "<id>.json"
 	file, err := f.Open(fs.baseDir() + id + ".json")
@@ -76,7 +110,8 @@ func (fs *FileSystemRepository) baseDir() string {
 	return fs.base
 }
 
-func (fs *FileSystemRepository) getFs() afero.Fs {
+// GetFs TODO godoc
+func (fs *FileSystemRepository) GetFs() afero.Fs {
 	// Default to OS file system if another FS has not been provided
 	if fs.fs == nil {
 		fs.fs = afero.NewOsFs()

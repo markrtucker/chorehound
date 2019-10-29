@@ -24,5 +24,5 @@ type Repository interface {
 func (c Chore) SaveTo(ctx context.Context, r Repository) error {
 
 	// TODO: populate ID (or verify uniqueness??)
-	return nil
+	return r.SaveChore(ctx, c)
 }
